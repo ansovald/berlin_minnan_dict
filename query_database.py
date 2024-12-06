@@ -32,10 +32,41 @@ def get_session(session=None):
     session = Session()
     return session
 
-def query_wiktionary_entries(hokkien=None, english=None, hanzi=None, syllable_count=None, session=None):
-    # TODO: Implement query_database function
-    #       It should smartly handle the different types of queries that can be made, and combine them
+def get_wiktionary_entry(entry_id=None, session=None):
+    if not entry_id:
+        print("Please provide an entry_id to search for")
+        return None
     session = get_session(session=session)
+    query = select(WiktionaryEntry).where(WiktionaryEntry.id.op('=')(entry_id))
+    entry = session.execute(query).scalars().first()
+    if entry:
+        # print(entry.to_dict())
+        return entry.to_dict()
+    else:
+        print(f"No entry found with id {entry_id}")
+        return None
+
+def get_sutian_lemma(lemma_id=None, session=None):
+    if not lemma_id:
+        print("Please provide a lemma_id to search for")
+        return None
+    session = get_session(session=session)
+    query = select(SutianLemma).where(SutianLemma.id.op('=')(lemma_id))
+    lemma = session.execute(query).scalars().first()
+    if lemma:
+        # print(lemma.to_dict())
+        return lemma.to_dict()
+    else:
+        print(f"No lemma found with id {lemma_id}")
+        return None
+
+def query_wiktionary_entries(hokkien=None, english=None, hanzi=None, syllable_count=None, session=None):
+    print(f"Querying Wiktionary entries. hokkien='{hokkien}', english='{english}', hanzi='{hanzi}', syllable_count='{syllable_count}'")
+    session = get_session(session=session)
+    if syllable_count:
+        if not hokkien and not english and not hanzi:
+            print("Please provide a search term for hokkien, english, or hanzi")
+            return []
     # TODO: expand later for hanzi only search?
     # if hanzi and hanzi.startswith('@'):
     #         query_hanzi(hanzi[1:])
@@ -49,8 +80,12 @@ def query_wiktionary_entries(hokkien=None, english=None, hanzi=None, syllable_co
     if hanzi:
         op, hanzi = build_search_pattern(hanzi)
         query = query.where(WiktionaryEntry.word.op(op)(hanzi))
-    if syllable_count:
-        query = query.where(WiktionaryEntry.syllable_count.op('=')(syllable_count))
+    if syllable_count and syllable_count != 0:
+        if syllable_count.is_digit():
+            syllable_count = int(syllable_count)
+            query = query.where(WiktionaryEntry.syllable_count.op('=')(syllable_count))
+        else:
+            print("Please provide a valid syllable count")
     words = session.execute(query).scalars().all()
     print(f"Found {len(words)} words matching the search criteria")
     wiktionary_entries = []

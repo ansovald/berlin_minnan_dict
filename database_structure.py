@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import declarative_base, relationship
+from sqlalchemy.util import PopulateDict
 
 Base = declarative_base()
 
@@ -19,18 +20,24 @@ class SutianCharacter(Base):
         return f"<SutianCharacter(hant='{self.hant}', romanization='{self.romanization}', suggested_order={self.suggested_order}, type='{self.type}')>"
 
     def to_dict(self):
-        return {'hant': self.hant, 'romanization': self.romanization, 'suggested_order': self.suggested_order, 'type': self.type}
+        character_dict = {
+            'id': self.id,
+            'hant': self.hant,
+            'romanization': self.romanization,
+            'suggested_order': self.suggested_order,
+            'type': self.type
+        }
+        return character_dict
 
 # Lemmas in 詞目.jsonl have the following fields:
-# 詞目id (lemma_id), 漢字 (hant), 羅馬字 (romanization), 分類 (classification), 羅馬字音檔檔名.
-# Last one is for audio files, we ignore that for now.
-# TODO: Add relationship to WiktionaryEntry. `hant` in SutianLemma should be the same as `word` in WiktionaryEntry.
+# 詞目id (lemma_id), 漢字 (hant), 羅馬字 (romanization), 分類 (classification), 羅馬字音檔檔名 (audio)
 class SutianLemma(Base):
     __tablename__ = 'sutian_lemma'
     id = Column('id', Integer, primary_key=True)
     hant = Column('hant', String)
     romanization = Column('romanization', String)
     classification = Column('classification', String)
+    audio = Column('audio', String)
     senses = relationship('SutianSense', back_populates='lemma')
     variant_writings = relationship('SutianVariantWriting', back_populates='lemma')
     common_variant_pronunciations = relationship('SutianCommonVariantPronunciation', back_populates='lemma')
@@ -41,7 +48,19 @@ class SutianLemma(Base):
         return f"<SutianLemma(hant='{self.hant}', romanization='{self.romanization}', classification='{self.classification}')>"
 
     def to_dict(self):
-        lemma_dict = {'hant': self.hant, 'romanization': self.romanization, 'classification': self.classification}
+        lemma_dict = {
+            'id': self.id,
+            'hant': self.hant,
+            'romanization': self.romanization,
+            'classification': self.classification,
+            'audio': self.audio,
+            'senses': [],
+            'variant_writings': [],
+            'common_variant_pronunciations': [],
+            'other_variant_pronunciations': [],
+        }
+        if self.senses:
+            lemma_dict['senses'] = [sense.to_dict() for sense in self.senses]
         if self.variant_writings:
             lemma_dict['variant_writings'] = [v.variant for v in self.variant_writings]
         if self.common_variant_pronunciations:
@@ -67,8 +86,12 @@ class SutianSense(Base):
         return f"<SutianSense(lemma='{self.lemma.hant}', lexical_category='{self.lexical_category}', explanation='{self.explanation}')>"
 
     def to_dict(self):
-        # sense_dict = self.lemma.to_dict()
-        sense_dict = {'lexical_category': self.lexical_category, 'explanation': self.explanation}
+        sense_dict = {
+            'id': self.id,
+            'lemma_id': self.lemma_id,
+            'lexical_category': self.lexical_category,
+            'explanation': self.explanation
+        }
         return sense_dict
 
 # Variant writings in 異用字.jsonl have the following fields:
@@ -125,19 +148,37 @@ class WiktionaryEntry(Base):
         return f"<WiktionaryEntry(word='{self.word}', pos='{self.pos}', syllable_count={self.syllable_count})>"
 
     def to_dict(self):
-        pronunciations = {}
+        entry_dict = {
+            'id': self.id,
+            'word': self.word,
+            'pos': self.pos,
+            'syllable_count': self.syllable_count,
+            'pronunciations': {},
+            'glosses': self.glosses.split('\n'),
+            'raw_glosses': self.raw_glosses.split('\n'),
+            'etymology': self.etymology,
+            'sutian_lemma': None
+        }
         for pronunciation in self.pronunciations:
-            if pronunciation.language.language not in pronunciations:
-                pronunciations[pronunciation.language.language] = []
-            pronunciations[pronunciation.language.language].append(pronunciation.pronunciation)
-        lemma_dict = None
+            if pronunciation.language.language not in entry_dict['pronunciations']:
+                entry_dict['pronunciations'][pronunciation.language.language] = []
+            entry_dict['pronunciations'][pronunciation.language.language].append(pronunciation.pronunciation)
         if self.sutian_lemma:
-            lemma_dict = self.sutian_lemma.to_dict()
-            if self.sutian_lemma.senses:
-                lemma_dict['senses'] = [sense.to_dict() for sense in self.sutian_lemma.senses]
-        return {'word': self.word, 'pos': self.pos, 'syllable_count': self.syllable_count,
-                'pronunciations': pronunciations, 'glosses': self.glosses, 'raw_glosses': self.raw_glosses,
-                'etymology': self.etymology, 'sutian_lemma': lemma_dict}
+            entry_dict['sutian_lemma'] = self.sutian_lemma.to_dict()
+        return entry_dict
+        # pronunciations = {}
+        # for pronunciation in self.pronunciations:
+        #     if pronunciation.language.language not in pronunciations:
+        #         pronunciations[pronunciation.language.language] = []
+        #     pronunciations[pronunciation.language.language].append(pronunciation.pronunciation)
+        # lemma_dict = None
+        # if self.sutian_lemma:
+        #     lemma_dict = self.sutian_lemma.to_dict()
+        #     if self.sutian_lemma.senses:
+        #         lemma_dict['senses'] = [sense.to_dict() for sense in self.sutian_lemma.senses]
+        # return {'word': self.word, 'pos': self.pos, 'syllable_count': self.syllable_count,
+        #         'pronunciations': pronunciations, 'glosses': self.glosses, 'raw_glosses': self.raw_glosses,
+        #         'etymology': self.etymology, 'sutian_lemma': lemma_dict}
 
 class WiktionaryPronunciation(Base):
     # Here, we handle the different pronunciations of a word
