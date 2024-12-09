@@ -53,7 +53,6 @@ class SutianLemma(Base):
             'hant': self.hant,
             'romanization': self.romanization,
             'classification': self.classification,
-            'audio': self.audio,
             'senses': [],
             'variant_writings': [],
             'common_variant_pronunciations': [],
@@ -67,10 +66,24 @@ class SutianLemma(Base):
             lemma_dict['common_variant_pronunciations'] = [v.romanization for v in self.common_variant_pronunciations]
         if self.other_variant_pronunciations:
             lemma_dict['other_variant_pronunciations'] = [v.romanization for v in self.other_variant_pronunciations]
+        if self.audio:
+            lemma_dict['audio_file'] = get_audio_file(self.audio)
         return lemma_dict
 
     def sense_dicts(self):
         return [sense.to_dict() for sense in self.senses]
+
+def get_audio_file(audio_file):
+    audio_dir = 'sutiau-mp3/'
+    # print(f'audio_file: {audio_file}, len: {len(audio_file)}')
+    if len(audio_file) < 7:
+        audio_dir += '0'
+    elif len(audio_file) == 7:
+        audio_dir += audio_file[0]
+    else:
+        audio_dir = audio_file[:2]
+    audio_dir += '/'
+    return audio_dir + audio_file + '.mp3'
 
 # Senses in 義項.jsonl have the following fields:
 # 義項id (sense_id), 詞目id (lemma_id), 詞性 (lexical_category), 解說 (explanation)
@@ -139,7 +152,6 @@ class WiktionaryEntry(Base):
     syllable_count = Column('syllable_count', Integer)
     pronunciations = relationship('WiktionaryPronunciation', back_populates='entry')
     glosses = Column('glosses', String)
-    raw_glosses = Column('raw_glosses', String)
     etymology = Column('etymology', String)
     sutian_lemma_id = Column('sutian_lemma_id', Integer, ForeignKey('sutian_lemma.id'))
     sutian_lemma = relationship('SutianLemma', back_populates='wiktionary_entries')
@@ -154,31 +166,18 @@ class WiktionaryEntry(Base):
             'pos': self.pos,
             'syllable_count': self.syllable_count,
             'pronunciations': {},
-            'glosses': self.glosses.split('\n'),
-            'raw_glosses': self.raw_glosses.split('\n'),
+            'glosses': None,
             'etymology': self.etymology,
-            'sutian_lemma': None
         }
+        if self.glosses:
+            entry_dict['glosses'] = self.glosses.split('\n')
         for pronunciation in self.pronunciations:
             if pronunciation.language.language not in entry_dict['pronunciations']:
                 entry_dict['pronunciations'][pronunciation.language.language] = []
             entry_dict['pronunciations'][pronunciation.language.language].append(pronunciation.pronunciation)
-        if self.sutian_lemma:
-            entry_dict['sutian_lemma'] = self.sutian_lemma.to_dict()
-        return entry_dict
-        # pronunciations = {}
-        # for pronunciation in self.pronunciations:
-        #     if pronunciation.language.language not in pronunciations:
-        #         pronunciations[pronunciation.language.language] = []
-        #     pronunciations[pronunciation.language.language].append(pronunciation.pronunciation)
-        # lemma_dict = None
         # if self.sutian_lemma:
-        #     lemma_dict = self.sutian_lemma.to_dict()
-        #     if self.sutian_lemma.senses:
-        #         lemma_dict['senses'] = [sense.to_dict() for sense in self.sutian_lemma.senses]
-        # return {'word': self.word, 'pos': self.pos, 'syllable_count': self.syllable_count,
-        #         'pronunciations': pronunciations, 'glosses': self.glosses, 'raw_glosses': self.raw_glosses,
-        #         'etymology': self.etymology, 'sutian_lemma': lemma_dict}
+        #     entry_dict['sutian_lemma'] = self.sutian_lemma.to_dict()
+        return entry_dict
 
 class WiktionaryPronunciation(Base):
     # Here, we handle the different pronunciations of a word

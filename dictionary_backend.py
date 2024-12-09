@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request #, api_session
 from flask_cors import CORS
+from flask_cors import CORS
 from query_database import get_session, query_wiktionary_entries, get_wiktionary_entry, get_sutian_lemma
 
 # session = get_session()

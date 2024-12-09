@@ -10,7 +10,7 @@ import re
 from sqlalchemy import event
 
 
-def start_engine(database_file='hokkien.db'):
+def start_engine(database_file='data/hokkien.db'):
     engine = create_engine(f'sqlite:///{database_file}')
     print(f"Connecting to database: {database_file}")
 
@@ -71,29 +71,35 @@ def query_wiktionary_entries(hokkien=None, english=None, hanzi=None, syllable_co
     # if hanzi and hanzi.startswith('@'):
     #         query_hanzi(hanzi[1:])
     query = select(WiktionaryEntry)
+    print(f"Initial query: {query}")
     if english:
         op, english = build_search_pattern(english, gloss_search=True)
+        # Find the english query either in the glosses or the raw_glosses, or both
         query = query.where(WiktionaryEntry.glosses.op(op)(english))
+        # print(f"Searching for English glosses: {english}\nquery: {query}")
     if hokkien:
         op, hokkien = build_search_pattern(hokkien)
+        # `normalized_pronunciation` here means: accents and other tone marks are removed. Currently, it searches all
+        # pronunciations (Mandarin, Hokkien-TL, Hokkien-POJ) TODO: make it smarter
         query = query.where(WiktionaryEntry.pronunciations.any(WiktionaryPronunciation.normalized_pronunciation.op(op)(hokkien)), WiktionaryPronunciation.language.has(WiktionaryLanguage.language == 'Hokkien-TL'))
+        # print(f"Searching for Hokkien pronunciation: {hokkien}\nquery: {query}")
     if hanzi:
         op, hanzi = build_search_pattern(hanzi)
         query = query.where(WiktionaryEntry.word.op(op)(hanzi))
     if syllable_count and syllable_count != 0:
-        if syllable_count.is_digit():
+        if type(syllable_count) == str:
             syllable_count = int(syllable_count)
-            query = query.where(WiktionaryEntry.syllable_count.op('=')(syllable_count))
-        else:
-            print("Please provide a valid syllable count")
+        query = query.where(WiktionaryEntry.syllable_count.op('=')(syllable_count))
     words = session.execute(query).scalars().all()
     print(f"Found {len(words)} words matching the search criteria")
-    wiktionary_entries = []
+    results = []
     if words:
         for word in words:
-            # print(word.to_dict())
-            wiktionary_entries.append(word.to_dict())
-    return wiktionary_entries
+            hit_dict = { 'lemma': word.word, 'wiktionary_entry': word.to_dict() }
+            if word.sutian_lemma:
+                hit_dict['sutian_lemma'] = word.sutian_lemma.to_dict()
+            results.append(hit_dict)
+    return results
 
 def query_sutian_lemma(lemma_search, session=None):
     session = get_session(session)
@@ -117,20 +123,20 @@ def query_hanzi(hanzi_search, session=None):
         return
     session = get_session(session)
     print(f"Searching for hanzi: {hanzi_search}")
-    query = select(SutianCharacter).where(SutianCharacter.hant == hanzi_search)
+    query = select(SutianCharacter).where(SutianCharacter.hant.op('=')(hanzi_search))
     characters = session.execute(query).scalars().all()
     findings = []
     if characters:
         for character in characters:
             print(character.to_dict())
             findings.append(character.to_dict())
-    # Search Wiktionary entries where word is the hanzi_search and pos is 'character'
-    query = select(WiktionaryEntry).where(WiktionaryEntry.word == hanzi_search, WiktionaryEntry.pos == 'character')
-    words = session.execute(query).scalars().all()
-    if words:
-        for word in words:
-            print(word.to_dict())
-            findings.append(word.to_dict())
+    # # Search Wiktionary entries where word is the hanzi_search and pos is 'character'
+    # query = select(WiktionaryEntry).where(WiktionaryEntry.word == hanzi_search, WiktionaryEntry.pos == 'character')
+    # words = session.execute(query).scalars().all()
+    # if words:
+    #     for word in words:
+    #         print(word.to_dict())
+    #         findings.append(word.to_dict())
     return findings
 
 def query_english_glosses(english_search, engine=None, session=None):
@@ -197,4 +203,3 @@ def query_hokkien_lemma(search_lemma='哭爸', session=None):
             for key in pronunciations:
                 print(f"\t{key}: {', '.join(pronunciations[key])}")
             print(f"\tglosses:\n\t\t{'\n\t\t'.join(word.glosses.split('\n'))}")
-            print(f"\traw glosses:\n\t\t{'\n\t\t'.join(word.raw_glosses.split('\n'))}")
