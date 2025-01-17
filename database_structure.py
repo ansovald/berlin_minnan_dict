@@ -74,6 +74,7 @@ class SutianLemma(Base):
         return [sense.to_dict() for sense in self.senses]
 
 def get_audio_file(audio_file):
+    # print(f'audio_file: {audio_file}')
     audio_dir = 'sutiau-mp3/'
     # print(f'audio_file: {audio_file}, len: {len(audio_file)}')
     if len(audio_file) < 7:
@@ -81,7 +82,7 @@ def get_audio_file(audio_file):
     elif len(audio_file) == 7:
         audio_dir += audio_file[0]
     else:
-        audio_dir = audio_file[:2]
+        audio_dir += audio_file[:2]
     audio_dir += '/'
     return audio_dir + audio_file + '.mp3'
 
@@ -153,6 +154,7 @@ class WiktionaryEntry(Base):
     pronunciations = relationship('WiktionaryPronunciation', back_populates='entry')
     glosses = Column('glosses', String)
     etymology = Column('etymology', String)
+    # TODO: This is potentially a many-to-many relationship. We need to figure out how to handle this.
     sutian_lemma_id = Column('sutian_lemma_id', Integer, ForeignKey('sutian_lemma.id'))
     sutian_lemma = relationship('SutianLemma', back_populates='wiktionary_entries')
 
