@@ -33,15 +33,17 @@ function SutianLemmaDetails({ lemma }) {
         }
         {audio_file && <div><audio controls src={audio_file} /></div>}
         {classification && <p><strong>Classification:</strong> {classification}</p>}
-        {senses && senses.length > 0 && (
-            <div>
-            <strong>Senses:</strong>
-            <ol>
-                {senses.map((sense, index) => (
-                    <SutianSenseDetails sense={ sense } index={index}/>
-                ))}
-            </ol>
-            </div>
+        {senses && senses.length > 0 ? (
+                <div>
+                    <strong>Senses:</strong>
+                    <ol>
+                        {senses.map((sense, index) => (
+                            <SutianSenseDetails sense={sense} index={index} key={index} />
+                        ))}
+                    </ol>
+                </div>
+            ) : (
+                <p>（單字不成詞者 ，無義項）</p>
         )}
     </div>
   )

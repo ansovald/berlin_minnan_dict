@@ -71,7 +71,7 @@ def query_wiktionary_entries(hokkien=None, english=None, hanzi=None, syllable_co
     # if hanzi and hanzi.startswith('@'):
     #         query_hanzi(hanzi[1:])
     query = select(WiktionaryEntry)
-    print(f"Initial query: {query}")
+    # print(f"Initial query: {query}")
     if english:
         op, english = build_search_pattern(english, gloss_search=True)
         # Find the english query either in the glosses or the raw_glosses, or both
@@ -81,7 +81,10 @@ def query_wiktionary_entries(hokkien=None, english=None, hanzi=None, syllable_co
         op, hokkien = build_search_pattern(hokkien)
         # `normalized_pronunciation` here means: accents and other tone marks are removed. Currently, it searches all
         # pronunciations (Mandarin, Hokkien-TL, Hokkien-POJ) TODO: make it smarter
-        query = query.where(WiktionaryEntry.pronunciations.any(WiktionaryPronunciation.normalized_pronunciation.op(op)(hokkien)), WiktionaryPronunciation.language.has(WiktionaryLanguage.language == 'Hokkien-TL'))
+        query = query.where(
+            WiktionaryEntry.pronunciations.any(
+                            WiktionaryPronunciation.normalized_pronunciation.op(op)(hokkien)
+            ), WiktionaryPronunciation.language.has(WiktionaryLanguage.language == 'Hokkien-TL'))
         # print(f"Searching for Hokkien pronunciation: {hokkien}\nquery: {query}")
     if hanzi:
         op, hanzi = build_search_pattern(hanzi)
