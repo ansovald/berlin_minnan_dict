@@ -14,6 +14,8 @@ function SearchBar({ onSearch }) {
   };
 
   const handleSearch = () => {
+    const queryParams = new URLSearchParams(searchParams).toString();
+    window.history.pushState(null, "", `?${queryParams}`);
     onSearch(searchParams);
   };
 
