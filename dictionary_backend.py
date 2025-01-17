@@ -1,10 +1,12 @@
 from flask import Flask, jsonify, request #, api_session
 from flask_cors import CORS
-from flask_cors import CORS
 from query_database import get_session, query_wiktionary_entries, get_wiktionary_entry, get_sutian_lemma
 import time
-
+import hashlib
+import json
 # session = get_session()
+
+CACHE_TIME_THRESHOLD = 3
 
 app = Flask(__name__)
 CORS(app)
@@ -16,30 +18,54 @@ def time_since(since):
     s -= m * 60
     return f'{int(m)}m {int(s)}s'
 
+def query_log(start_time, **params):
+    from datetime import datetime
+    with open('logs/query_log.txt', 'a') as f:
+        log_dict = { 'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3], 'time': f'{time.time()-start_time:.2f}'}
+        log_dict.update({k: v for k, v in params.items() if v})
+        f.write(str(log_dict) + '\n')
+
+def cache_result(results, start_time, time_threshold=CACHE_TIME_THRESHOLD, **params):
+    # If the query took longer than the threshold, log it to `query_log.txt` and cache it
+    if time.time() - start_time > time_threshold:
+        query_log(start_time, **params)
+        save_cached_result(results, **params)
+
+def save_cached_result(results, **params):
+    # Create a unique identifier for the search parameters, using a hash of the parameters
+    hash_params = hashlib.md5(str(params).encode()).hexdigest()
+    with open(f'cache/{hash_params}.json', 'w') as f:
+        json.dump(results, f)
+
+def load_cached_result(**params):
+    hash_params = hashlib.md5(str(params).encode()).hexdigest()
+    try:
+        with open(f'cache/{hash_params}.json', 'r') as f:
+            print(f"Loaded cached result for {params}")
+            return json.load(f)
+    except FileNotFoundError:
+        return None
+
 @app.route('/api/search', methods=['POST'])
 def search_entries():
     params = request.json
-    hokkien = params.get('hokkien')
-    english = params.get('english')
-    hanzi = params.get('hanzi')
-    syllable_count = params.get('syllable_count')
+    # Check if the search parameters have been cached
+    cached_result = load_cached_result(**params)
+    if cached_result:
+        print(f"Returning cached result: {cached_result}")
+        return jsonify(cached_result)
 
     # Ensure a session is created
     session = get_session()
     try:
-        if not any([hokkien, english, hanzi, syllable_count]):
+        if not any(params.values()):
             return jsonify({"error": "No valid search parameters provided"}), 400
 
         import time
-        start = time.time()
-        results = query_wiktionary_entries(
-            hokkien=hokkien,
-            english=english,
-            hanzi=hanzi,
-            syllable_count=syllable_count,
-            session=session
-        )
-        print(f"Found {len(results)} entries matching the search criteria, took {time_since(start)}")
+        start_time = time.time()
+        results = query_wiktionary_entries(**params, session=session)
+        print(f"Found {len(results)} entries matching the search criteria, took {time_since(start_time)}")
+        cache_result(results, start_time, **params)
         return jsonify(results)
     finally:
         session.close()

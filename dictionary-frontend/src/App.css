@@ -73,9 +73,13 @@ td, tr {
   width: 95%;
 }
 
-table { font-family: Ubuntu, sans-serif; }
+table { 
+  font-family: Ubuntu, sans-serif; 
+  margin: 1rem;
+  padding: 1rem;
+}
 
-th { background-color: #252525; padding: 1rem; }
+th, .show-more-row { background-color: #252525; padding: 1rem; text-align: center; }
 
 td { padding: 1rem; vertical-align: top; }
 
@@ -87,4 +91,16 @@ tr:hover {background-color: #404040; }
   font-family: Ubuntu, sans-serif;
 }
 /* .pinyin { font-size: 16px; } */
+
+.show-more-row {
+  font-family: Ubuntu, sans-serif;
+  margin: 1rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
+}
+
+.show-more-row:hover {
+    background-color: #303030;
+    cursor: pointer;
+}
 

@@ -32,24 +32,32 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="0.39413657"
-     inkscape:cx="414.83083"
-     inkscape:cy="466.84326"
+     inkscape:zoom="0.54725438"
+     inkscape:cx="181.81673"
+     inkscape:cy="255.82253"
      inkscape:window-width="1224"
      inkscape:window-height="847"
-     inkscape:window-x="217"
+     inkscape:window-x="216"
      inkscape:window-y="25"
      inkscape:window-maximized="0"
      inkscape:current-layer="svg2" />
+  <rect
+     style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#e6e5e6;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:1, 1;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1"
+     id="rect1"
+     width="512"
+     height="512"
+     x="0"
+     y="0"
+     ry="102" />
   <text
      xml:space="preserve"
-     style="font-size:466.667px;fill:#000080;fill-rule:evenodd;stroke:#000000;stroke-width:1.13386"
-     x="22.666504"
-     y="408.36676"
+     style="font-size:510.457px;fill:#000080;fill-rule:evenodd;stroke:none;stroke-width:1.24026"
+     x="0.77147943"
+     y="422.66418"
      id="text4"><tspan
        sodipodi:role="line"
-       x="22.666504"
-       y="408.36676"
+       x="0.77147943"
+       y="422.66418"
        id="tspan5"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:466.667px;font-family:'Heiti TC';-inkscape-font-specification:'Heiti TC'">閩</tspan></text>
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:510.457px;font-family:'Heiti TC';-inkscape-font-specification:'Heiti TC';fill:#000080;stroke:none;stroke-width:1.24026">閩</tspan></text>
 </svg>

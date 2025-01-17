@@ -60,7 +60,7 @@ def get_sutian_lemma(lemma_id=None, session=None):
         print(f"No lemma found with id {lemma_id}")
         return None
 
-def query_wiktionary_entries(hokkien=None, english=None, hanzi=None, syllable_count=None, session=None):
+def query_wiktionary_entries(hokkien=None, english=None, hanzi=None, syllable_count=None, session=None, verbose=False):
     print(f"Querying Wiktionary entries. hokkien='{hokkien}', english='{english}', hanzi='{hanzi}', syllable_count='{syllable_count}'")
     session = get_session(session=session)
     if syllable_count:
@@ -94,7 +94,8 @@ def query_wiktionary_entries(hokkien=None, english=None, hanzi=None, syllable_co
             syllable_count = int(syllable_count)
         query = query.where(WiktionaryEntry.syllable_count.op('=')(syllable_count))
     words = session.execute(query).scalars().all()
-    print(f"Found {len(words)} words matching the search criteria")
+    if verbose:
+        print(f"Found {len(words)} words matching the search criteria")
     results = []
     if words:
         for word in words:
