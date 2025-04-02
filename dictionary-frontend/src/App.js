@@ -1,24 +1,41 @@
 import React, { useState, useEffect } from "react";
 import SearchBar from "./components/SearchBar";
 import { fetchWiktionaryEntries } from "./services/api";
-// import WiktionaryEntryDetails from "./components/WiktionaryEntry";
 import './App.css';
 import ResultTable from "./components/ResultTable";
 
 function App() {
   const [results, setResults] = useState([]);
+  const [lastEntryId, setLastEntryId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [loadingDots, setLoadingDots] = useState("");
+  const [searchParams, setSearchParams] = useState({});
+  const [showBackToTop, setShowBackToTop] = useState(false); // State for "Back to top" button visibility
 
   const handleSearch = async (searchParams) => {
     console.log("Calling API with params:", searchParams);
+    setSearchParams(searchParams); // Save the current search parameters
     setLoading(true);
     try {
       const response = await fetchWiktionaryEntries(searchParams);
-      setResults(response.data); // Assuming response data is a list of wiktionary entries
-      console.log(results);
+      setResults(response.data.results); // Assuming response data contains results and last_entry_id
+      setLastEntryId(response.data.last_entry_id);
     } catch (error) {
       console.error("Error fetching wiktionary entries:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchMoreResults = async () => {
+    if (!lastEntryId || loading) return;
+    setLoading(true);
+    try {
+      const response = await fetchWiktionaryEntries({ ...searchParams, last_entry_id: lastEntryId });
+      setResults((prevResults) => [...prevResults, ...response.data.results]); // Append new results
+      setLastEntryId(response.data.last_entry_id); // Update lastEntryId for next fetch
+    } catch (error) {
+      console.error("Error fetching more results:", error);
     } finally {
       setLoading(false);
     }
@@ -48,18 +65,55 @@ function App() {
     }
   }, [loading]);
 
+  // Add scroll event listener to toggle "Back to top" button visibility
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 200); // Show button if scrolled down 200px
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" }); // Smooth scroll to top
+  };
+
   return (
     <div>
       <h1>Berlin Minnan Dictionary</h1>
       <SearchBar onSearch={handleSearch} />
       <div>
         <h3>Search Results</h3>
-        {loading ? (
+        {loading && results.length === 0 ? (
           <p>Querying database{loadingDots}</p>
         ) : (
-          <ResultTable results={results} />
+          <ResultTable
+            results={results}
+            fetchMoreResults={fetchMoreResults}
+            hasMoreResults={!!lastEntryId} // Show "Show more results" only if there are more results
+          />
         )}
       </div>
+      {showBackToTop && ( // Conditionally render "Back to top" button
+        <button
+          onClick={scrollToTop}
+          style={{
+            position: "fixed",
+            bottom: "20px",
+            right: "20px",
+            padding: "10px 15px",
+            fontSize: "14px",
+            backgroundColor: "#007bff",
+            color: "#fff",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+            boxShadow: "0 2px 5px rgba(0, 0, 0, 0.3)",
+          }}
+        >
+          Back to top
+        </button>
+      )}
     </div>
   );
 }

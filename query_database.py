@@ -60,8 +60,10 @@ def get_sutian_lemma(lemma_id=None, session=None):
         print(f"No lemma found with id {lemma_id}")
         return None
 
-def query_wiktionary_entries(hokkien=None, english=None, hanzi=None, syllable_count=None, session=None, verbose=False):
+def query_wiktionary_entries(hokkien=None, english=None, hanzi=None, syllable_count=None, session=None, last_entry_id=None, page_size=20, verbose=False):
     print(f"Querying Wiktionary entries. hokkien='{hokkien}', english='{english}', hanzi='{hanzi}', syllable_count='{syllable_count}'")
+    if last_entry_id:
+        print(f"Last entry id: {last_entry_id}")
     session = get_session(session=session)
     if syllable_count:
         if not hokkien and not english and not hanzi:
@@ -70,8 +72,11 @@ def query_wiktionary_entries(hokkien=None, english=None, hanzi=None, syllable_co
     # TODO: expand later for hanzi only search?
     # if hanzi and hanzi.startswith('@'):
     #         query_hanzi(hanzi[1:])
+
+    # Base query
     query = select(WiktionaryEntry)
-    # print(f"Initial query: {query}")
+
+    # Apply filters
     if english:
         op, english = build_search_pattern(english, gloss_search=True)
         # Find the english query either in the glosses or the raw_glosses, or both
@@ -93,17 +98,31 @@ def query_wiktionary_entries(hokkien=None, english=None, hanzi=None, syllable_co
         if type(syllable_count) == str:
             syllable_count = int(syllable_count)
         query = query.where(WiktionaryEntry.syllable_count.op('=')(syllable_count))
+    
+    # Apply cursor-based pagination
+    if last_entry_id:
+        query = query.where(WiktionaryEntry.id > last_entry_id)
+    
+    # Apply ordering and limit
+    query = query.order_by(WiktionaryEntry.id).limit(page_size)
+
     words = session.execute(query).scalars().all()
     if verbose:
         print(f"Found {len(words)} words matching the search criteria")
     results = []
+    last_entry_id = None
     if words:
         for word in words:
             hit_dict = { 'lemma': word.word, 'wiktionary_entry': word.to_dict() }
             if word.sutian_lemma:
                 hit_dict['sutian_lemma'] = word.sutian_lemma.to_dict()
             results.append(hit_dict)
-    return results
+        last_entry_id = words[-1].id
+
+    return {
+        'results': results,
+        'last_entry_id': last_entry_id
+    }
 
 def query_sutian_lemma(lemma_search, session=None):
     session = get_session(session)

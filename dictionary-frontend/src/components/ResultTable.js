@@ -1,16 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import WiktionaryEntryDetails from "./WiktionaryEntry";
 import SutianLemmaDetails from "./SutianLemma";
 
-function ResultTable({ results }) {
-    const [visibleResults, setVisibleResults] = useState(20);
-
-    const handleShowMore = () => {
-        setVisibleResults((prev) => prev + 20);
-    };
-
+function ResultTable({ results, fetchMoreResults, hasMoreResults }) {
     return (
-        <div>
+        <div style={{ maxHeight: "400px" }}>
             {results.length === 0 ? (
                 <p>No results found matching your query</p>
             ) : (
@@ -26,7 +20,7 @@ function ResultTable({ results }) {
                             </tr>
                         </thead>
                         <tbody>
-                            {results.slice(0, visibleResults).map((result, index) => (
+                            {results.map((result, index) => (
                                 <tr key={index}>
                                     <td>{index + 1}</td>
                                     <td className='hant hant-lemma'>{result.lemma}</td>
@@ -38,16 +32,13 @@ function ResultTable({ results }) {
                                     </td>
                                 </tr>
                             ))}
+                            {hasMoreResults && (
+                                <tr onClick={fetchMoreResults} style={{ cursor: "pointer", textAlign: "center" }}>
+                                    <td colSpan="4">Show more results</td>
+                                </tr>
+                            )}
                         </tbody>
                     </table>
-                    {visibleResults < results.length && (
-                        <div className='show-more-row'
-                            onClick={handleShowMore}
-                            style={{ cursor: "pointer" }}
-                        >
-                            Show more results
-                        </div>
-                    )}
                 </>
             )}
         </div>

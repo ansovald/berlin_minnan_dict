@@ -49,24 +49,18 @@ def load_cached_result(**params):
 @app.route('/api/search', methods=['POST'])
 def search_entries():
     params = request.json
-    # Check if the search parameters have been cached
-    cached_result = load_cached_result(**params)
-    if cached_result:
-        print(f"Returning cached result: {cached_result}")
-        return jsonify(cached_result)
-
+    last_entry_id = params.pop('last_entry_id', None)  # Extract last_entry_id if provided
     # Ensure a session is created
     session = get_session()
     try:
         if not any(params.values()):
             return jsonify({"error": "No valid search parameters provided"}), 400
 
-        import time
         start_time = time.time()
-        results = query_wiktionary_entries(**params, session=session)
-        print(f"Found {len(results)} entries matching the search criteria, took {time_since(start_time)}")
-        cache_result(results, start_time, **params)
-        return jsonify(results)
+        results_data = query_wiktionary_entries(**params, last_entry_id=last_entry_id, session=session)
+        print(f"Found {len(results_data['results'])} entries matching the search criteria, took {time_since(start_time)}")
+        print(results_data['results'][0])
+        return jsonify(results_data)  # Return the dict with results and last_entry_id
     finally:
         session.close()
 
