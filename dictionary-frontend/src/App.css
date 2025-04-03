@@ -77,6 +77,7 @@ table {
   font-family: Ubuntu, sans-serif; 
   margin: 1rem;
   padding: 1rem;
+  padding-bottom: calc(30px + 5vh);
 }
 
 th, .show-more-row { background-color: var(--bg-secondary); padding: 1rem; text-align: center; }
