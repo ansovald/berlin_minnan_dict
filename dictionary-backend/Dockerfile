@@ -4,7 +4,7 @@ FROM python:3.12
 WORKDIR /app
 COPY requirements.txt .
 # Install dependencies
-RUN pip install --default-timeout=100 -r requirements.txt
+RUN pip install -r requirements.txt --index-url https://mirrors.aliyun.com/pypi/simple/
 # Copy the rest of the application code to the working directory
 COPY . .
 # Expose port 5000
