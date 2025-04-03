@@ -97,19 +97,7 @@ function App() {
       {showBackToTop && ( // Conditionally render "Back to top" button
         <button
           onClick={scrollToTop}
-          style={{
-            position: "fixed",
-            bottom: "20px",
-            right: "20px",
-            padding: "10px 15px",
-            fontSize: "14px",
-            backgroundColor: "#007bff",
-            color: "#fff",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-            boxShadow: "0 2px 5px rgba(0, 0, 0, 0.3)",
-          }}
+          className="back-to-top"
         >
           Back to top
         </button>

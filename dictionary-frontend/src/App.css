@@ -28,19 +28,19 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+:root {
+  --bg-primary: #202020;
+  --bg-secondary: #252525;
+  --bg-tertiary: #303030;
+  --bg-highlight: #404040;
+  --text-primary: #e6e5e6;
 }
 
 body {
-  background-color: #202020;
-  color: #e6e5e6;
-  margin-top: 20vh;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  margin-top: calc(30px + 5vh);
+  margin-bottom: calc(30px + 5vh);
   margin-left: 10vw;
   margin-right: 10vw;
 }
@@ -79,13 +79,13 @@ table {
   padding: 1rem;
 }
 
-th, .show-more-row { background-color: #252525; padding: 1rem; text-align: center; }
+th, .show-more-row { background-color: var(--bg-secondary); padding: 1rem; text-align: center; }
 
 td { padding: 1rem; vertical-align: top; }
 
-tr:nth-child(even){background-color: #252525; }
-tr:nth-child(odd){background-color: #303030; }
-tr:hover {background-color: #404040; }
+tr:nth-child(even){background-color: var(--bg-secondary); }
+tr:nth-child(odd){background-color: var(--bg-tertiary); }
+tr:hover {background-color: var(--bg-highlight); }
 
 .romanization { 
   font-family: Ubuntu, sans-serif;
@@ -100,7 +100,23 @@ tr:hover {background-color: #404040; }
 }
 
 .show-more-row:hover {
-    background-color: #303030;
     cursor: pointer;
 }
 
+.back-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 15px;
+  font-family: Ubuntu, sans-serif;
+  font-size: 14px;
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: none;
+  border-radius: 5px;
+}
+
+.back-to-top:hover {
+  background-color: var(--bg-highlight);
+  cursor: pointer;
+}

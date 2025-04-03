@@ -117,7 +117,10 @@ def query_wiktionary_entries(hokkien=None, english=None, hanzi=None, syllable_co
             if word.sutian_lemma:
                 hit_dict['sutian_lemma'] = word.sutian_lemma.to_dict()
             results.append(hit_dict)
-        last_entry_id = words[-1].id
+        if len(words) == page_size:
+            last_entry_id = words[-1].id
+        else:
+            last_entry_id = None
 
     return {
         'results': results,
