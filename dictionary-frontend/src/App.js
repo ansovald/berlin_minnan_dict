@@ -83,7 +83,6 @@ function App() {
       <h1>Berlin Minnan Dictionary</h1>
       <SearchBar onSearch={handleSearch} />
       <div>
-        <h3>Search Results</h3>
         {loading && results.length === 0 ? (
           <p>Querying database{loadingDots}</p>
         ) : (

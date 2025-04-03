@@ -2,7 +2,7 @@ from database_structure import (Base, SutianCharacter, SutianLemma, SutianSense,
                                 SutianCommonVariantPronunciation, SutianOtherVariantPronunciation,
                                 WiktionaryEntry, WiktionaryPronunciation, WiktionaryLanguage)
 
-from sqlalchemy import create_engine, func, select
+from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker
 from regex_search_patterns import build_search_pattern
 

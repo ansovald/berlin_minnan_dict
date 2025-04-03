@@ -20,7 +20,7 @@ def time_since(since):
 
 def query_log(start_time, **params):
     from datetime import datetime
-    with open('logs/query_log.txt', 'a') as f:
+    with open('../logs/query_log.txt', 'a') as f:
         log_dict = { 'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3], 'time': f'{time.time()-start_time:.2f}'}
         log_dict.update({k: v for k, v in params.items() if v})
         f.write(str(log_dict) + '\n')

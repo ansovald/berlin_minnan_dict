@@ -1,5 +1,6 @@
 /dictionary-frontend/public/sutiau-mp3/
-/node_modules/
+/dictionary-frontend/node_modules/
 /cache/
 /makemeahanzi_svgs/svgs/
-node_modules
+.DS_Store
+.idea/

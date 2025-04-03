@@ -9,7 +9,6 @@ function ResultTable({ results, fetchMoreResults, hasMoreResults }) {
                 <p>No results found matching your query</p>
             ) : (
                 <>
-                    <p>Number of results: {results.length}</p>
                     <table className='table'>
                         <thead>
                             <tr>
