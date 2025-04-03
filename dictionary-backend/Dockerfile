@@ -4,7 +4,7 @@ FROM python:3.12-slim
 WORKDIR /app
 COPY requirements.txt .
 # Install dependencies
-RUN pip install - r requirements.txt
+RUN pip install -r requirements.txt
 # Copy the rest of the application code to the working directory
 COPY . .
 # Expose port 5000
