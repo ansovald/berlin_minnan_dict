@@ -50,6 +50,7 @@ function App() {
       syllable_count: params.get("syllable_count") || "",
       case_insensitive: params.get("case_insensitive") === "true", // Convert to boolean
     };
+    setSearchParams(searchParams); // Update state with URL parameters
     if (Object.values(searchParams).some((param) => param !== "")) {
       handleSearch(searchParams);
     }
@@ -82,7 +83,7 @@ function App() {
   return (
     <div>
       <h1>Berlin Minnan Dictionary</h1>
-      <SearchBar onSearch={handleSearch} />
+      <SearchBar onSearch={handleSearch} initialSearchParams={searchParams} />
       <div>
         {loading && results.length === 0 ? (
           <p>Querying database{loadingDots}</p>

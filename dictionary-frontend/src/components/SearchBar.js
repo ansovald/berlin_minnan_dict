@@ -1,13 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-function SearchBar({ onSearch }) {
+function SearchBar({ onSearch, initialSearchParams }) {
   const [searchParams, setSearchParams] = useState({
     hokkien: "",
     english: "",
     hanzi: "",
     syllable_count: "",
-    case_insensitive: true, // New property
+    case_insensitive: true,
+    ...initialSearchParams, // Initialize with values from props
   });
+
+  useEffect(() => {
+    setSearchParams((prev) => ({ ...prev, ...initialSearchParams })); // Update fields when props change
+  }, [initialSearchParams]);
 
   const handleInputChange = (event) => {
     const { name, value, type, checked } = event.target;
