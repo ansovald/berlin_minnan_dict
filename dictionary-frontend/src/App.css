@@ -66,11 +66,19 @@ td, tr {
 }
 
 .grid-item {
-  padding: 1rem;
+  padding: .5rem;
 }
 
 .text-input {
-  width: 95%;
+  /* width: 95%; */
+  margin-block: .5em;
+}
+
+.checkbox { vertical-align: middle; }
+
+.checkbox-label {
+  font-size: .8rem;
+  vertical-align: middle;
 }
 
 table { 

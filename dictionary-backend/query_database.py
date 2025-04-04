@@ -60,7 +60,7 @@ def get_sutian_lemma(lemma_id=None, session=None):
         print(f"No lemma found with id {lemma_id}")
         return None
 
-def query_wiktionary_entries(hokkien=None, english=None, hanzi=None, syllable_count=None, session=None, last_entry_id=None, page_size=20, verbose=False):
+def query_wiktionary_entries(hokkien=None, english=None, hanzi=None, syllable_count=None, session=None, case_insensitive=False, last_entry_id=None, page_size=20, verbose=False):
     print(f"Querying Wiktionary entries. hokkien='{hokkien}', english='{english}', hanzi='{hanzi}', syllable_count='{syllable_count}'")
     if last_entry_id:
         print(f"Last entry id: {last_entry_id}")
@@ -78,10 +78,10 @@ def query_wiktionary_entries(hokkien=None, english=None, hanzi=None, syllable_co
 
     # Apply filters
     if english:
-        op, english = build_search_pattern(english, gloss_search=True)
+        op, english = build_search_pattern(english, gloss_search=True, case_insensitive=case_insensitive)
         # Find the english query either in the glosses or the raw_glosses, or both
         query = query.where(WiktionaryEntry.glosses.op(op)(english))
-        # print(f"Searching for English glosses: {english}\nquery: {query}")
+        print(f"Searching for English glosses: {english}\nquery: {query}")
     if hokkien:
         op, hokkien = build_search_pattern(hokkien)
         # `normalized_pronunciation` here means: accents and other tone marks are removed. Currently, it searches all
@@ -105,6 +105,8 @@ def query_wiktionary_entries(hokkien=None, english=None, hanzi=None, syllable_co
     
     # Apply ordering and limit
     query = query.order_by(WiktionaryEntry.id).limit(page_size)
+
+    print(f"Executing query: {query}")
 
     words = session.execute(query).scalars().all()
     if verbose:

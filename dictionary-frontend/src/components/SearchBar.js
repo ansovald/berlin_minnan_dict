@@ -6,11 +6,15 @@ function SearchBar({ onSearch }) {
     english: "",
     hanzi: "",
     syllable_count: "",
+    case_insensitive: true, // New property
   });
 
   const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setSearchParams({ ...searchParams, [name]: value });
+    const { name, value, type, checked } = event.target;
+    setSearchParams({
+      ...searchParams,
+      [name]: type === "checkbox" ? checked : value, // Handle checkbox changes
+    });
   };
 
   const handleSearch = () => {
@@ -30,6 +34,7 @@ function SearchBar({ onSearch }) {
       english: "",
       hanzi: "",
       syllable_count: "",
+      case_insensitive: false,
     });
   };
 
@@ -66,6 +71,18 @@ function SearchBar({ onSearch }) {
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
           />
+          <div>
+            <label className="checkbox-label">
+              <input
+                className="checkbox"
+                type="checkbox"
+                name="case_insensitive"
+                checked={searchParams.case_insensitive}
+                onChange={handleInputChange}
+              />
+              Case insensitive search
+            </label>
+          </div>
         </div>
         <div className='grid-item'>
           <div><label htmlFor="hanzi">Hanzi:</label></div>

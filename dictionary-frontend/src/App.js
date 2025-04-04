@@ -48,6 +48,7 @@ function App() {
       english: params.get("english") || "",
       hanzi: params.get("hanzi") || "",
       syllable_count: params.get("syllable_count") || "",
+      case_insensitive: params.get("case_insensitive") === "true", // Convert to boolean
     };
     if (Object.values(searchParams).some((param) => param !== "")) {
       handleSearch(searchParams);

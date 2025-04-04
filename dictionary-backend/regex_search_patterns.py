@@ -1,5 +1,4 @@
-
-def build_search_pattern(search_term, gloss_search=False):
+def build_search_pattern(search_term, gloss_search=False, case_insensitive=False):
     # Returns op: REGEXP/= and search_term
     if search_term[0] == '@':
         if gloss_search:
@@ -18,4 +17,8 @@ def build_search_pattern(search_term, gloss_search=False):
         search_term = search_term[1:-1]
     else:
         search_term = '.*' + search_term + '.*'
+    
+    if case_insensitive:
+        search_term = f"(?i){search_term}"  # Add case-insensitive flag to the regex
+    
     return 'REGEXP', search_term
