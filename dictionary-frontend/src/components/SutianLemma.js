@@ -31,7 +31,7 @@ function SutianLemmaDetails({ lemma }) {
             <><p>Other Variants: <span className='romanization'>{other_variant_pronunciations.join(", ")}</span></p></>
         )
         }
-        {audio_file && <div><audio controls src={audio_file} /></div>}
+        {audio_file && <div><audio controls src={`${process.env.PUBLIC_URL}/${audio_file}`} /></div>}
         {classification && <p><strong>Classification:</strong> {classification}</p>}
         {senses && senses.length > 0 ? (
                 <div>
