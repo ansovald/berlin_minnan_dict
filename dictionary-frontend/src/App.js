@@ -48,10 +48,15 @@ function App() {
       english: params.get("english") || "",
       hanzi: params.get("hanzi") || "",
       syllable_count: params.get("syllable_count") || "",
-      case_insensitive: params.get("case_insensitive") === "true", // Convert to boolean
+      case_insensitive: params.has("case_insensitive") ? params.get("case_insensitive") === "true" : true, // Default to true
     };
     setSearchParams(searchParams); // Update state with URL parameters
-    if (Object.values(searchParams).some((param) => param !== "")) {
+
+    // Trigger search only if at least one parameter other than case_insensitive is not empty
+    const hasSearchableParams = Object.entries(searchParams).some(
+      ([key, value]) => key !== "case_insensitive" && value !== ""
+    );
+    if (hasSearchableParams) {
       handleSearch(searchParams);
     }
   }, []);
@@ -82,9 +87,15 @@ function App() {
 
   return (
     <div>
-      <h1>Berlin Minnan Dictionary</h1>
-      <SearchBar onSearch={handleSearch} initialSearchParams={searchParams} />
-      <div>
+      <div className="header-bar">
+        <img src={`${process.env.PUBLIC_URL}/logo.svg`} alt="Logo" className="header-logo" /> {/* Reference logo from %PUBLIC_URL% */}
+        <div className="header-content">
+          <h1>Berlin Minnan Dictionary</h1>
+          <SearchBar onSearch={handleSearch} initialSearchParams={searchParams} />
+        </div>
+        <img src={`${process.env.PUBLIC_URL}/placeholder.svg`} className="header-logo" /> {/* Reference logo from %PUBLIC_URL% */}
+      </div>
+      <div className="content-container">
         {loading && results.length === 0 ? (
           <p>Querying database{loadingDots}</p>
         ) : (

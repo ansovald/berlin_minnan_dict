@@ -28,6 +28,13 @@
   color: #61dafb;
 }
 
+@font-face {
+  font-family: 'Linux Biolinum';
+  src: url('/public/fonts/linux_biolinum_sc.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 :root {
   --bg-primary: #202020;
   --bg-secondary: #252525;
@@ -39,10 +46,78 @@
 body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  margin-top: calc(30px + 5vh);
+  font-family: Ubuntu, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  font-family: 'Linux Biolinum', sans-serif;
+}
+
+.header-bar {
+  /* position: fixed; */
+  top: 0;
+  width: 100%; /* Ensure it spans the full width */
+  display: flex;
+  flex-direction: row;
+  background-color: var(--bg-secondary); /* Ensure background covers content behind */
+  z-index: 1000; /* Ensure it stays above other elements */
+  /* padding: 10px; */
+  box-shadow: 0 0 5px var(--bg-primary); /* Optional: Add shadow for better visibility */
+}
+
+.header-logo, .header-right {
+  height: 8rem;
+  width: 8rem;
+  margin-inline: 1rem;
+  margin-block: auto;
+}
+
+/* .header-right {
+  display: block;
+} */
+
+.header-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centers content vertically */
+  align-items: center; /* Centers content horizontally */
+  height: 100%; /* Ensure the parent div has a height */
+  width: 100%;
+}
+
+.search-bar, .search-bar-buttons {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  /* display: grid; */
+  /* gap: 1rem; */
+  /* grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); */
+}
+
+.search-bar-item {
+  padding: .5rem;
+}
+
+.text-input {
+  /* width: 95%; */
+  margin-block: .5em;
+}
+
+.content-container {
+  /* background-color: var(--bg-primary);
+  color: var(--text-primary); */
+  margin-top: 0;
   margin-bottom: calc(30px + 5vh);
   margin-left: 10vw;
   margin-right: 10vw;
+  /* padding-top: 190px; */
+}
+
+button {
+  margin: 0.5rem;
 }
 
 td, tr {
@@ -57,21 +132,6 @@ td, tr {
   flex-direction: row;
   flex-wrap: wrap;
   gap: 20px 30px;
-}
-
-.grid {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-}
-
-.grid-item {
-  padding: .5rem;
-}
-
-.text-input {
-  /* width: 95%; */
-  margin-block: .5em;
 }
 
 .checkbox { vertical-align: middle; }

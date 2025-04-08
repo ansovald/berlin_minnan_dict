@@ -6,7 +6,7 @@ function SearchBar({ onSearch, initialSearchParams }) {
     english: "",
     hanzi: "",
     syllable_count: "",
-    case_insensitive: true,
+    case_insensitive: true, // Default to true
     ...initialSearchParams, // Initialize with values from props
   });
 
@@ -39,7 +39,7 @@ function SearchBar({ onSearch, initialSearchParams }) {
       english: "",
       hanzi: "",
       syllable_count: "",
-      case_insensitive: false,
+      case_insensitive: true, // Reset to true
     });
   };
 
@@ -52,8 +52,8 @@ function SearchBar({ onSearch, initialSearchParams }) {
 
   return (
     <form onSubmit={(e) => e.preventDefault()}>
-      <div className='grid'>
-        <div className='grid-item'>
+      <div className='search-bar'>
+        <div className='search-bar-item'>
           <div><label htmlFor="hokkien">Hokkien:</label></div>
           <input
             className='text-input'
@@ -65,7 +65,7 @@ function SearchBar({ onSearch, initialSearchParams }) {
             onKeyDown={handleKeyDown}
           />
         </div>
-        <div className='grid-item'>
+        <div className='search-bar-item'>
           <div><label htmlFor="english">English:</label></div>
           <input
             className='text-input'
@@ -89,7 +89,7 @@ function SearchBar({ onSearch, initialSearchParams }) {
             </label>
           </div>
         </div>
-        <div className='grid-item'>
+        <div className='search-bar-item'>
           <div><label htmlFor="hanzi">Hanzi:</label></div>
           <input
             className='text-input'
@@ -101,7 +101,7 @@ function SearchBar({ onSearch, initialSearchParams }) {
             onKeyDown={handleKeyDown}
           />
         </div>
-        <div className='grid-item'>
+        <div className='search-bar-item'>
           <div><label htmlFor="syllable_count">Syllable Count:</label></div>
           <input
             className='text-input'
@@ -114,7 +114,7 @@ function SearchBar({ onSearch, initialSearchParams }) {
           />
         </div>
       </div>
-      <div className='grid-item'>
+      <div className='search-bar-item search-bar-buttons'>
           <button type="button" onClick={handleSearch}>Search</button>
           <button type="button" onClick={handleClear}>Clear all</button>
       </div>
