@@ -76,14 +76,18 @@ def query_wiktionary_entries(hokkien=None, english=None, hanzi=None, syllable_co
     # Base query
     query = select(WiktionaryEntry)
 
+    search_patterns = {}
+
     # Apply filters
     if english:
         op, english = build_search_pattern(english, gloss_search=True, case_insensitive=case_insensitive)
+        search_patterns['english'] = english
         # Find the english query either in the glosses or the raw_glosses, or both
         query = query.where(WiktionaryEntry.glosses.op(op)(english))
         print(f"Searching for English glosses: {english}\nquery: {query}")
     if hokkien:
         op, hokkien = build_search_pattern(hokkien)
+        search_patterns['hokkien'] = hokkien
         # `normalized_pronunciation` here means: accents and other tone marks are removed. Currently, it searches all
         # pronunciations (Mandarin, Hokkien-TL, Hokkien-POJ) TODO: make it smarter
         query = query.where(
@@ -93,6 +97,7 @@ def query_wiktionary_entries(hokkien=None, english=None, hanzi=None, syllable_co
         # print(f"Searching for Hokkien pronunciation: {hokkien}\nquery: {query}")
     if hanzi:
         op, hanzi = build_search_pattern(hanzi)
+        search_patterns['hanzi'] = hanzi
         query = query.where(WiktionaryEntry.word.op(op)(hanzi))
     if syllable_count and syllable_count != 0:
         if type(syllable_count) == str:
@@ -126,7 +131,8 @@ def query_wiktionary_entries(hokkien=None, english=None, hanzi=None, syllable_co
 
     return {
         'results': results,
-        'last_entry_id': last_entry_id
+        'last_entry_id': last_entry_id,
+        'search_patterns': search_patterns
     }
 
 def query_sutian_lemma(lemma_search, session=None):

@@ -3,8 +3,10 @@ import SearchBar from "./components/SearchBar";
 import { fetchWiktionaryEntries } from "./services/api";
 import './App.css';
 import ResultTable from "./components/ResultTable";
+import LandingPage from "./components/LandingPage"; // Import the new LandingPage component
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // State to track authentication
   const [results, setResults] = useState([]);
   const [lastEntryId, setLastEntryId] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -84,6 +86,10 @@ function App() {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" }); // Smooth scroll to top
   };
+
+  if (!isAuthenticated) {
+    return <LandingPage onAuthenticate={() => setIsAuthenticated(true)} />; // Render LandingPage if not authenticated
+  }
 
   return (
     <div>
