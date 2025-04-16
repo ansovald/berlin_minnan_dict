@@ -27,7 +27,7 @@ def search_entries():
         start_time = time.time()
         results_data = query_wiktionary_entries(**params, last_entry_id=last_entry_id, session=session)
         print(f"Found {len(results_data['results'])} entries matching the search criteria, took {time_since(start_time)}")
-        print(results_data)
+        # print(results_data)
         return jsonify(results_data)  # Return the dict with results and last_entry_id
     finally:
         session.close()

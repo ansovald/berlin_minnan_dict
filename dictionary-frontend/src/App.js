@@ -44,23 +44,38 @@ function App() {
   };
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const searchParams = {
-      hokkien: params.get("hokkien") || "",
-      english: params.get("english") || "",
-      hanzi: params.get("hanzi") || "",
-      syllable_count: params.get("syllable_count") || "",
-      case_insensitive: params.has("case_insensitive") ? params.get("case_insensitive") === "true" : true, // Default to true
-    };
-    setSearchParams(searchParams); // Update state with URL parameters
+    const updateSearchParamsFromURL = () => {
+      const params = new URLSearchParams(window.location.search);
+      const searchParams = {
+        hokkien: params.get("hokkien") || "",
+        english: params.get("english") || "",
+        hanzi: params.get("hanzi") || "",
+        syllable_count: params.get("syllable_count") || "",
+        case_insensitive: params.has("case_insensitive") ? params.get("case_insensitive") === "true" : true, // Default to true
+      };
+      setSearchParams(searchParams); // Update state with URL parameters
 
-    // Trigger search only if at least one parameter other than case_insensitive is not empty
-    const hasSearchableParams = Object.entries(searchParams).some(
-      ([key, value]) => key !== "case_insensitive" && value !== ""
-    );
-    if (hasSearchableParams) {
-      handleSearch(searchParams);
-    }
+      // Trigger search only if at least one parameter other than case_insensitive is not empty
+      const hasSearchableParams = Object.entries(searchParams).some(
+        ([key, value]) => key !== "case_insensitive" && value !== ""
+      );
+      if (hasSearchableParams) {
+        handleSearch(searchParams);
+      }
+    };
+
+    // Initial load
+    updateSearchParamsFromURL();
+
+    // Listen for browser history changes
+    const handlePopState = () => {
+      updateSearchParamsFromURL();
+    };
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
   }, []);
 
   useEffect(() => {
