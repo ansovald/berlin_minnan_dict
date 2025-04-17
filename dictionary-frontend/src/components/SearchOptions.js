@@ -15,6 +15,7 @@ function SearchOptions({ helpVisible }) {
                 <li><code>?</code> means the preceding character is optional. For example, <code>tsh?inn</code> matches <match>tshinn</match> and <match>tsinn</match>.</li>
             </ul>
             <p>Advanced use case: if the search term is enclosed in <code>/</code>, you can enter <a href="https://cheatography.com/davechild/cheat-sheets/regular-expressions/">regular expressions</a>.</p>
+            <p>For feature requests, bug reports, comments, and feedback please open an issue on <a href="https://github.com/ansovald/berlin_minnan_dict/issues">GitHub</a> or write me a <a href="mailto:osswaldk@hu-berlin.de">mail</a>.</p>
         </div>
     );
 }
