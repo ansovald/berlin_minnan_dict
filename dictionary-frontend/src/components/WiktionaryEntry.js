@@ -14,7 +14,17 @@ function WiktionaryEntryDetails({ entry }) {
         {/* Give out `Hokkien-TL` and `Mandarin`, if these keys are available */}
         {Object.entries(pronunciations).map(([lang, pronunciations], index) => (
             (lang === 'Hokkien-TL' || lang === 'Mandarin') ? (
-                <p><b>{lang}: </b><span className='romanization'>{pronunciations.join(", ")}</span></p>
+                <p>
+                    <b>{lang}: </b>
+                    <span
+                        className='romanization'
+                        dangerouslySetInnerHTML={{
+                            __html: pronunciations
+                                .map(pron => pron.replace(/\*\*\*(.*)\*\*\*/, '<match>$1</match>'))
+                                .join(", ")
+                        }}
+                    />
+                </p>
             ) : null
         ))}
 
@@ -38,7 +48,7 @@ function WiktionaryEntryDetails({ entry }) {
             <strong>Glosses:</strong>
             <ul>
                 {glosses.map((gloss, index) => (
-                <li key={index}>{gloss}</li>
+                <li key={index} dangerouslySetInnerHTML={{ __html: gloss.replace(/\*\*\*(.*?)\*\*\*/g, '<match>$1</match>') }}></li>
                 ))}
             </ul>
             </div>

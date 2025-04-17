@@ -1,24 +1,20 @@
-def build_search_pattern(search_term, gloss_search=False, case_insensitive=False):
-    # Returns op: REGEXP/= and search_term
-    if search_term[0] == '@':
-        if gloss_search:
-            return 'REGEXP', '\\b' + search_term[1:] + '\\b'
-        return '=', search_term[1:]
-    elif '*' in search_term:
-        if search_term[0] == '*':
-            search_term = '.*' + search_term[1:]
-        else:
-            search_term = '\\b' + search_term
-        if search_term[-1] == '*':
-            search_term = search_term[:-1] + '.*'
-        else:
-            search_term = search_term + '\\b'
-    elif search_term[0] == '/' and search_term[-1] == '/':
+def build_search_pattern(search_term, gloss_search=False, case_sensitive=True):
+    # Returns operator `REGEXP` or `=` and search_term
+    # operator = '=' if gloss_search else 'REGEXP'
+    if search_term[0] == '/' and search_term[-1] == '/':
         search_term = search_term[1:-1]
     else:
-        search_term = '.*' + search_term + '.*'
+        if gloss_search:
+            search_term = '\\b' + search_term + '\\b'
+            search_term = search_term.replace('*', '.*')
+        else:
+            if not search_term[0] == '*':
+                search_term = '\\b' + search_term
+            if not search_term[-1] == '*':
+                search_term = search_term + '\\b'
+            search_term = search_term.replace('*', '.*')
     
-    if case_insensitive:
+    if not case_sensitive:
         search_term = f"(?i){search_term}"  # Add case-insensitive flag to the regex
     
     return 'REGEXP', search_term

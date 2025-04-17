@@ -1,4 +1,4 @@
-.App {
+/* .App {
   text-align: center;
 }
 
@@ -26,11 +26,25 @@
 
 .App-link {
   color: #61dafb;
+} */
+
+@font-face {
+  font-family: 'Linux Biolinum SC';
+  src: url('/public/fonts/linux_biolinum_sc.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
 
 @font-face {
   font-family: 'Linux Biolinum';
-  src: url('/public/fonts/linux_biolinum_sc.ttf') format('truetype');
+  src: url('/public/fonts/linux_biolinum_r.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Linux Biolinum B';
+  src: url('/public/fonts/linux_biolinum_rb.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -40,7 +54,19 @@
   --bg-secondary: #252525;
   --bg-tertiary: #303030;
   --bg-highlight: #404040;
+  --bg-highlight-plus: #505050;
   --text-primary: #e6e5e6;
+  --logo-fg: #000080;
+  --link-color: #9e9ef0;
+}
+
+a {
+  color: var(--link-color);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
 }
 
 body {
@@ -52,7 +78,11 @@ body {
 }
 
 h1 {
-  font-family: 'Linux Biolinum', sans-serif;
+  font-family: 'Linux Biolinum SC', sans-serif;
+}
+
+p {
+  margin: 0.5rem 0;
 }
 
 .header-bar {
@@ -71,7 +101,8 @@ h1 {
   height: 8rem;
   width: 8rem;
   margin-inline: 1rem;
-  margin-block: auto;
+  /* margin-block: auto; */
+  margin-top: 4rem;
 }
 
 /* .header-right {
@@ -97,13 +128,41 @@ h1 {
   /* grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); */
 }
 
+.search-bar-item, .search-bar-buttons {
+  margin: .5rem;
+  font-family: 'Linux Biolinum', sans-serif;
+  font-size: 1rem;
+}
+
 .search-bar-item {
-  padding: .5rem;
+  max-width: 12rem;
+}
+
+.help-text {
+  /* background-color: var(--bg-tertiary);
+  border-radius: 1rem;
+  padding: 1rem;
+  padding-block: 1rem; */
+  display: none; /* Initially hidden */
+}
+
+.help-text.visible {
+  display: block; /* Visible when toggled */
+}
+
+.general-help-text {
+  margin: 1rem;
+  padding-inline: 1rem;
 }
 
 .text-input {
   /* width: 95%; */
   margin-block: .5em;
+  background-color: var(--text-primary);
+  color: var(--bg-primary);
+  border-radius: 0.2rem;
+  padding: 0.3rem;
+  border: none;
 }
 
 .content-container {
@@ -118,6 +177,31 @@ h1 {
 
 button {
   margin: 0.5rem;
+  font-family: 'Linux Biolinum B', sans-serif;
+  font-size: 1rem;
+  min-width: 6rem;
+  background-color: var(--bg-highlight);
+  color: var(--text-primary);
+  border-radius: 0.2rem;
+  border: none;
+  padding: 0.3rem;
+}
+
+button:hover {
+  background-color: var(--bg-highlight-plus);
+  cursor: pointer;
+  transition-duration: 0.2s;
+}
+
+.help-button {
+  font-size: 2rem;
+  min-height: 3rem;
+  min-width: 3rem;
+}
+
+.help-button.active {
+  background-color: var(--text-primary);
+  color: var(--bg-primary)
 }
 
 td, tr {
@@ -144,7 +228,7 @@ td, tr {
 table { 
   font-family: Ubuntu, sans-serif; 
   margin: 1rem;
-  padding: 1rem;
+  /* padding: 1rem; */
   padding-bottom: calc(30px + 5vh);
 }
 
@@ -188,4 +272,15 @@ tr:hover {background-color: var(--bg-highlight); }
 .back-to-top:hover {
   background-color: var(--bg-highlight);
   cursor: pointer;
+}
+
+code {
+  font-family: monospace;
+}
+
+match, code {
+  background-color: var(--bg-highlight-plus);
+  color: var(--text-primary);
+  padding: 0.2rem;
+  border-radius: 0.3rem;
 }

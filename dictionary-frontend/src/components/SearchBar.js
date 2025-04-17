@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 
-function SearchBar({ onSearch, initialSearchParams }) {
+function SearchBar({ onSearch, initialSearchParams, helpVisible, toggleHelp }) {
   const [searchParams, setSearchParams] = useState({
     hokkien: "",
     english: "",
     hanzi: "",
     syllable_count: "",
-    case_insensitive: true, // Default to true
+    case_sensitive_en: false, // Default to false
+    case_sensitive_nan: false, // Default to false
     ...initialSearchParams, // Initialize with values from props
   });
 
@@ -39,7 +40,8 @@ function SearchBar({ onSearch, initialSearchParams }) {
       english: "",
       hanzi: "",
       syllable_count: "",
-      case_insensitive: true, // Reset to true
+      case_sensitive_en: false,
+      case_sensitive_nan: false,
     });
   };
 
@@ -64,6 +66,19 @@ function SearchBar({ onSearch, initialSearchParams }) {
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
           />
+          <label className="checkbox-label">
+            <input
+              className="checkbox"
+              type="checkbox"
+              name="case_sensitive_nan"
+              checked={searchParams.case_sensitive_nan}
+              onChange={handleInputChange}
+            />
+            case sensitive
+          </label>
+          <div className={`help-text ${helpVisible ? "visible" : "hidden"}`} id="hokkien-help-text">
+            <p><i>Search for a Hokkien term using Tâi-lô romanization</i></p>
+          </div>
         </div>
         <div className='search-bar-item'>
           <div><label htmlFor="english">English:</label></div>
@@ -81,12 +96,15 @@ function SearchBar({ onSearch, initialSearchParams }) {
               <input
                 className="checkbox"
                 type="checkbox"
-                name="case_insensitive"
-                checked={searchParams.case_insensitive}
+                name="case_sensitive_en"
+                checked={searchParams.case_sensitive_en}
                 onChange={handleInputChange}
               />
-              Case insensitive search
+              case sensitive
             </label>
+          </div>
+          <div className={`help-text ${helpVisible ? "visible" : "hidden"}`} id="english-help-text">
+            <p><i>Search English Wiktionary glosses</i></p>
           </div>
         </div>
         <div className='search-bar-item'>
@@ -100,6 +118,9 @@ function SearchBar({ onSearch, initialSearchParams }) {
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
           />
+          <div className={`help-text ${helpVisible ? "visible" : "hidden"}`} id="hanzi-help-text">
+            <p><i>Search for a Hokkien term using Chinese characters</i></p>
+          </div>
         </div>
         <div className='search-bar-item'>
           <div><label htmlFor="syllable_count">Syllable Count:</label></div>
@@ -112,9 +133,23 @@ function SearchBar({ onSearch, initialSearchParams }) {
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
           />
+          <div className={`help-text ${helpVisible ? "visible" : "hidden"}`} id="syllable-count-help-text">
+            <p><i>Search only for Hokkien terms with a specific number of syllables</i></p>
+          </div>
+        </div>
+        <div className='search-bar-item'>
+          <button
+            type="button"
+            className={`help-button ${helpVisible ? "active" : ""}`}
+            id="help-button"
+            title="Explain Search Options"
+            onClick={toggleHelp}
+          >
+            ?
+          </button>
         </div>
       </div>
-      <div className='search-bar-item search-bar-buttons'>
+      <div className='search-bar-buttons'>
           <button type="button" onClick={handleSearch}>Search</button>
           <button type="button" onClick={handleClear}>Clear all</button>
       </div>

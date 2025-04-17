@@ -13,6 +13,11 @@ function App() {
   const [loadingDots, setLoadingDots] = useState("");
   const [searchParams, setSearchParams] = useState({});
   const [showBackToTop, setShowBackToTop] = useState(false); // State for "Back to top" button visibility
+  const [helpVisible, setHelpVisible] = useState(false); // State to track help visibility
+
+  const toggleHelp = () => {
+    setHelpVisible((prev) => !prev); // Toggle help visibility
+  };
 
   const handleSearch = async (searchParams) => {
     console.log("Calling API with params:", searchParams);
@@ -51,13 +56,14 @@ function App() {
         english: params.get("english") || "",
         hanzi: params.get("hanzi") || "",
         syllable_count: params.get("syllable_count") || "",
-        case_insensitive: params.has("case_insensitive") ? params.get("case_insensitive") === "true" : true, // Default to true
+        case_sensitive_en: params.has("case_sensitive_en") ? params.get("case_sensitive_en") === "false" : false, // Default to true
+        case_sensitive_nan: params.has("case_sensitive_nan") ? params.get("case_sensitive_nan") === "false" : false, // Default to true
       };
       setSearchParams(searchParams); // Update state with URL parameters
 
-      // Trigger search only if at least one parameter other than case_insensitive is not empty
+      // Trigger search only if at least one parameter, other than case_sensitive_en and case_sensitive_nan, is not empty
       const hasSearchableParams = Object.entries(searchParams).some(
-        ([key, value]) => key !== "case_insensitive" && value !== ""
+        ([key, value]) => key !== "case_sensitive_en" && key !== "case_sensitive_nan" && value.trim() !== ""
       );
       if (hasSearchableParams) {
         handleSearch(searchParams);
@@ -112,7 +118,12 @@ function App() {
         <img src={`${process.env.PUBLIC_URL}/logo.svg`} alt="Logo" className="header-logo" /> {/* Reference logo from %PUBLIC_URL% */}
         <div className="header-content">
           <h1>Berlin Minnan Dictionary</h1>
-          <SearchBar onSearch={handleSearch} initialSearchParams={searchParams} />
+          <SearchBar
+            onSearch={handleSearch}
+            initialSearchParams={searchParams}
+            helpVisible={helpVisible} // Pass helpVisible state
+            toggleHelp={toggleHelp} // Pass toggleHelp function
+          />
         </div>
         <img src={`${process.env.PUBLIC_URL}/placeholder.svg`} className="header-logo" /> {/* Reference logo from %PUBLIC_URL% */}
       </div>
@@ -124,6 +135,7 @@ function App() {
             results={results}
             fetchMoreResults={fetchMoreResults}
             hasMoreResults={!!lastEntryId} // Show "Show more results" only if there are more results
+            helpVisible={helpVisible} // Pass helpVisible state
           />
         )}
       </div>

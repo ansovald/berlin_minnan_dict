@@ -1,10 +1,12 @@
 import React from "react";
 import WiktionaryEntryDetails from "./WiktionaryEntry";
 import SutianLemmaDetails from "./SutianLemma";
+import SearchOptions from "./SearchOptions";
 
-function ResultTable({ results, fetchMoreResults, hasMoreResults }) {
+function ResultTable({ results, fetchMoreResults, hasMoreResults, helpVisible }) {
     return (
-        <div style={{ maxHeight: "400px" }}>
+        <div>
+            <SearchOptions helpVisible={helpVisible} />
             {results.length === 0 ? (
                 <p>No results found matching your query</p>
             ) : (
@@ -22,7 +24,7 @@ function ResultTable({ results, fetchMoreResults, hasMoreResults }) {
                             {results.map((result, index) => (
                                 <tr key={index}>
                                     <td>{index + 1}</td>
-                                    <td className='hant hant-lemma'>{result.lemma}</td>
+                                    <td className='hant hant-lemma' dangerouslySetInnerHTML={{ __html: result.lemma.replace(/\*\*\*(.*?)\*\*\*/g, '<match>$1</match>') }}></td>
                                     <td>
                                         <WiktionaryEntryDetails entry={result.wiktionary_entry} />
                                     </td>
