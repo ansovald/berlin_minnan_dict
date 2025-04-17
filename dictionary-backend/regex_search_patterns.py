@@ -1,4 +1,4 @@
-def build_search_pattern(search_term, gloss_search=False, case_sensitive=True):
+def build_search_pattern(search_term, gloss_search=False, case_sensitive=True, hanzi_search=False):
     # Returns operator `REGEXP` or `=` and search_term
     # operator = '=' if gloss_search else 'REGEXP'
     if search_term[0] == '/' and search_term[-1] == '/':
@@ -6,6 +6,8 @@ def build_search_pattern(search_term, gloss_search=False, case_sensitive=True):
     else:
         if gloss_search:
             search_term = '\\b' + search_term + '\\b'
+            search_term = search_term.replace('*', '.*')
+        elif hanzi_search:
             search_term = search_term.replace('*', '.*')
         else:
             if not search_term[0] == '*':

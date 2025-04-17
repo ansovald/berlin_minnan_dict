@@ -77,7 +77,7 @@ function SearchBar({ onSearch, initialSearchParams, helpVisible, toggleHelp }) {
             case sensitive
           </label>
           <div className={`help-text ${helpVisible ? "visible" : "hidden"}`} id="hokkien-help-text">
-            <p><i>Search for a Hokkien term using Tâi-lô romanization</i></p>
+            <p><i>Search for a Hokkien lemma using Tâi-lô romanization</i></p>
           </div>
         </div>
         <div className='search-bar-item'>
@@ -119,7 +119,7 @@ function SearchBar({ onSearch, initialSearchParams, helpVisible, toggleHelp }) {
             onKeyDown={handleKeyDown}
           />
           <div className={`help-text ${helpVisible ? "visible" : "hidden"}`} id="hanzi-help-text">
-            <p><i>Search for a Hokkien term using Chinese characters</i></p>
+            <p><i>Search for a Hokkien lemma using Chinese characters</i></p>
           </div>
         </div>
         <div className='search-bar-item'>
