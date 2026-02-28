@@ -11,7 +11,8 @@
 
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:5000/api";
+// Use relative URL in production, localhost in development
+const API_BASE_URL = process.env.REACT_APP_API_URL || "/api";
 
 export const fetchWiktionaryEntries = (params) => {
     return axios.post(`${API_BASE_URL}/search`, params);

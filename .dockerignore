@@ -1,0 +1,36 @@
+# Node modules
+dictionary-frontend/node_modules
+dictionary-frontend/build
+
+# Python cache
+dictionary-backend/__pycache__
+**/*.pyc
+**/*.pyo
+**/*.pyd
+.Python
+
+# Environment files
+**/.env
+**/.env.local
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Documentation
+*.md
+LICENSE
+
+# Old Dockerfiles
+dictionary-frontend/Dockerfile
+dictionary-backend/Dockerfile

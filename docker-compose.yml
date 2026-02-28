@@ -1,0 +1,11 @@
+services:
+  dictionary:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      # Optional: Mount data directory if needed
+      - ./dictionary-backend/data:/app/backend/data
+    restart: unless-stopped
