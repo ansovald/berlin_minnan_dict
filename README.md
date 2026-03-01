@@ -1,10 +1,9 @@
 # Berlin Minnan Dictionary
 
-This is the code for a dictionary for Hokkien Chinese that combines publicly available data from Wiktionary with the [MoE-Dictionary](https://sutian.moe.edu.tw/)
+This is the code for a dictionary for Hokkien Chinese that combines publicly available data from Wiktionary with the [MoE-Dictionary](https://sutian.moe.edu.tw/). 
 
-## Docker Deployment
+It is currently hosted by Humboldt University of Berlin: [Berlin Minnan Dictionary](https://minnan-iaaw.hu-berlin.de/?hanzi=%E6%AD%A1%E8%BF%8E).
 
-The application runs both the frontend and backend in a single Docker container.
 
 ### Building and Running
 

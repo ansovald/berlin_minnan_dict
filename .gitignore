@@ -7,6 +7,14 @@
 notes_on_docker.md
 /dictionary-frontend/.env
 /dictionary-frontend/README.md
+/dictionary-frontend/public/impressum-config.json
 .idea
 .vscode
 .DS_Store
+*.whl
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+node_modules/

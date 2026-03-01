@@ -3,6 +3,8 @@ import SearchBar from "./components/SearchBar";
 import { fetchWiktionaryEntries } from "./services/api";
 import './App.css';
 import ResultTable from "./components/ResultTable";
+import Footer from "./components/Footer";
+import Impressum from "./components/Impressum";
 
 function App() {
   const [results, setResults] = useState([]);
@@ -12,6 +14,7 @@ function App() {
   const [searchParams, setSearchParams] = useState({});
   const [showBackToTop, setShowBackToTop] = useState(false); // State for "Back to top" button visibility
   const [helpVisible, setHelpVisible] = useState(false); // State to track help visibility
+  const [showImpressum, setShowImpressum] = useState(false); // State for Impressum visibility
 
   const toggleHelp = () => {
     setHelpVisible((prev) => !prev); // Toggle help visibility
@@ -106,6 +109,14 @@ function App() {
     window.scrollTo({ top: 0, behavior: "smooth" }); // Smooth scroll to top
   };
 
+  const handleImpressumClick = () => {
+    setShowImpressum(true);
+  };
+
+  const handleCloseImpressum = () => {
+    setShowImpressum(false);
+  };
+
   return (
     <div>
       <div className="header-bar">
@@ -141,6 +152,8 @@ function App() {
           Back to top
         </button>
       )}
+      <Footer onImpressumClick={handleImpressumClick} />
+      {showImpressum && <Impressum onClose={handleCloseImpressum} />}
     </div>
   );
 }
