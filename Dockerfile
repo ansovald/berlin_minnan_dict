@@ -34,7 +34,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY dictionary-backend/ .
 
 # Copy built frontend from build stage
-COPY --from=frontend-build /app/frontend/build /usr/share/nginx/html
+COPY --chmod=755 --from=frontend-build /app/frontend/build /usr/share/nginx/html
 
 # Copy nginx configuration based on environment
 COPY nginx.conf nginx.prod.conf /tmp/
