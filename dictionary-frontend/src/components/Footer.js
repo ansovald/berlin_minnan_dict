@@ -6,10 +6,7 @@ function Footer({ onImpressumClick }) {
   return (
     <footer className="footer">
       <div className="footer-content">
-        <p>&copy; 2025-{currentYear} Karl Osswald. All rights reserved.</p>
-        <button onClick={onImpressumClick} className="impressum-link">
-          Impressum
-        </button>
+        <p>&copy; 2025-{currentYear} Karl Osswald • <span className="impressum-link" onClick={onImpressumClick}>Impressum</span></p>
       </div>
     </footer>
   );

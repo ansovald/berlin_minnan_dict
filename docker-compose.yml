@@ -3,9 +3,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        ENVIRONMENT: dev  # Change to 'prod' for production deployment with SSL
     ports:
       - "80:80"
     volumes:
       # Optional: Mount data directory if needed
       - ./dictionary-backend/data:/app/backend/data
+      # For production with SSL, also mount certificates:
+      # - /etc/letsencrypt:/etc/letsencrypt:ro
     restart: unless-stopped

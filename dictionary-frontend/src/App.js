@@ -118,40 +118,42 @@ function App() {
   };
 
   return (
-    <div>
-      <div className="header-bar">
-        <img src={`${process.env.PUBLIC_URL}/logo.svg`} alt="Logo" className="header-logo" /> {/* Reference logo from %PUBLIC_URL% */}
-        <div className="header-content">
-          <h1>Berlin Minnan Dictionary</h1>
-          <SearchBar
-            onSearch={handleSearch}
-            initialSearchParams={searchParams}
-            helpVisible={helpVisible} // Pass helpVisible state
-            toggleHelp={toggleHelp} // Pass toggleHelp function
-          />
+    <div className="app-container">
+      <div className="app-content">
+        <div className="header-bar">
+          <img src={`${process.env.PUBLIC_URL}/logo.svg`} alt="Logo" className="header-logo" /> {/* Reference logo from %PUBLIC_URL% */}
+          <div className="header-content">
+            <h1>Berlin Minnan Dictionary</h1>
+            <SearchBar
+              onSearch={handleSearch}
+              initialSearchParams={searchParams}
+              helpVisible={helpVisible} // Pass helpVisible state
+              toggleHelp={toggleHelp} // Pass toggleHelp function
+            />
+          </div>
+          <img src={`${process.env.PUBLIC_URL}/placeholder.svg`} className="header-logo" /> {/* Reference logo from %PUBLIC_URL% */}
         </div>
-        <img src={`${process.env.PUBLIC_URL}/placeholder.svg`} className="header-logo" /> {/* Reference logo from %PUBLIC_URL% */}
-      </div>
-      <div className="content-container">
-        {loading && results.length === 0 ? (
-          <p>Querying database{loadingDots}</p>
-        ) : (
-          <ResultTable
-            results={results}
-            fetchMoreResults={fetchMoreResults}
-            hasMoreResults={!!lastEntryId} // Show "Show more results" only if there are more results
-            helpVisible={helpVisible} // Pass helpVisible state
-          />
+        <div className="content-container">
+          {loading && results.length === 0 ? (
+            <p>Querying database{loadingDots}</p>
+          ) : (
+            <ResultTable
+              results={results}
+              fetchMoreResults={fetchMoreResults}
+              hasMoreResults={!!lastEntryId} // Show "Show more results" only if there are more results
+              helpVisible={helpVisible} // Pass helpVisible state
+            />
+          )}
+        </div>
+        {showBackToTop && ( // Conditionally render "Back to top" button
+          <button
+            onClick={scrollToTop}
+            className="back-to-top"
+          >
+            Back to top
+          </button>
         )}
       </div>
-      {showBackToTop && ( // Conditionally render "Back to top" button
-        <button
-          onClick={scrollToTop}
-          className="back-to-top"
-        >
-          Back to top
-        </button>
-      )}
       <Footer onImpressumClick={handleImpressumClick} />
       {showImpressum && <Impressum onClose={handleCloseImpressum} />}
     </div>

@@ -22,18 +22,6 @@ The application will be available at http://localhost
 
 ### Development
 
-For local development, you can still run the frontend and backend separately:
+For local development, I recommend using:
 
-**Backend:**
-```bash
-cd dictionary-backend
-pip install -r requirements.txt
-python dictionary_backend.py
-```
-
-**Frontend:**
-```bash
-cd dictionary-frontend
-npm install
-REACT_APP_API_URL=http://localhost:5000/api npm start
-``` 
+> docker-compose down && docker-compose build && docker-compose up -d

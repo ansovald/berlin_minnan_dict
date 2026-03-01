@@ -69,12 +69,26 @@ a:hover {
   text-decoration: underline;
 }
 
+html, body, #root {
+  height: 100%;
+}
+
 body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
   font-family: Ubuntu, sans-serif;
   margin: 0;
   padding: 0;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-content {
+  flex: 1 0 auto;
 }
 
 h1 {
@@ -293,6 +307,7 @@ match, code {
   text-align: center;
   margin-top: 2rem;
   border-top: 1px solid var(--bg-highlight);
+  flex-shrink: 0;
 }
 
 .footer-content {
@@ -305,17 +320,6 @@ match, code {
 .footer-content p {
   margin: 0;
   font-size: 0.9rem;
-}
-
-.impressum-link {
-  font-size: 0.9rem;
-  min-width: auto;
-  padding: 0.5rem 1rem;
-  background-color: var(--bg-tertiary);
-}
-
-.impressum-link:hover {
-  background-color: var(--bg-highlight);
 }
 
 /* Impressum Modal Styles */
@@ -397,4 +401,8 @@ match, code {
 
 .close-button:hover {
   background-color: var(--bg-highlight-plus);
+}
+
+.impressum-link {
+  text-decoration: underline;
 }

@@ -14,6 +14,9 @@ RUN npm run build
 # Stage 2: Final image with both backend and frontend
 FROM python:3.12-slim
 
+# Build argument for environment (dev or prod)
+ARG ENVIRONMENT=dev
+
 # Install nginx and supervisor
 RUN apt-get update && apt-get install -y \
     nginx \
@@ -33,8 +36,13 @@ COPY dictionary-backend/ .
 # Copy built frontend from build stage
 COPY --from=frontend-build /app/frontend/build /usr/share/nginx/html
 
-# Copy nginx configuration
-COPY nginx.conf /etc/nginx/sites-available/default
+# Copy nginx configuration based on environment
+COPY nginx.conf nginx.prod.conf /tmp/
+RUN if [ "$ENVIRONMENT" = "prod" ]; then \
+        cp /tmp/nginx.prod.conf /etc/nginx/sites-available/default; \
+    else \
+        cp /tmp/nginx.conf /etc/nginx/sites-available/default; \
+    fi
 
 # Copy supervisor configuration
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
