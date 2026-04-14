@@ -71,9 +71,6 @@ def query_wiktionary_entries(hokkien=None, english=None, hanzi=None, syllable_co
         if not hokkien and not english and not hanzi:
             print("Please provide a search term for hokkien, english, or hanzi")
             return []
-    # TODO: expand later for hanzi only search?
-    # if hanzi and hanzi.startswith('@'):
-    #         query_hanzi(hanzi[1:])
 
     # Base query
     query = select(WiktionaryEntry)
@@ -130,7 +127,6 @@ def query_wiktionary_entries(hokkien=None, english=None, hanzi=None, syllable_co
             if 'hokkien' in search_patterns and 'pronunciations' in wiktionary_entry:
                 if 'Hokkien-TL' in wiktionary_entry['pronunciations']:
                     for i, pronunciation in enumerate(wiktionary_entry['pronunciations']['Hokkien-TL']):
-                        print()
                         stripped = strip_hokkien_pronunciation(pronunciation)
                         normalized = unicodedata.normalize('NFD', pronunciation)
                         mapping = map_stripped_to_normalized(stripped, normalized)
